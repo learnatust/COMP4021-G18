@@ -1,0 +1,100 @@
+body {
+    font-family: "Press Start 2P", sans-serif;
+    margin: 0px;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background: url("../assets/background.jpg");
+    background-size: cover;
+    background-position: bottom;
+    position: relative;
+}
+#home-page {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    #online-users-area {
+        width: 80%;
+        height: 50%;
+
+        span {
+            color: white;
+            cursor: pointer !important;
+        }
+    }
+}
+#game-container {
+    position: relative;
+    width: 1000px;
+    height: 608px;
+    box-shadow: rgb(0, 0, 0, 0.8) 0 0 80px 20px;
+}
+canvas, #counter, #game-start, #game-over {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+canvas, #game-start, #game-over {
+/*    border: 1px solid gray;*/
+    width: 100%;
+    height: 100%;
+    /*width: 1000px;
+    height: 608px;*/
+}
+canvas {
+    background: url("../assets/bg3.jpg");
+    background-size: cover;
+    background-position: bottom;
+    cursor: url("../assets/aim.png") 10 8, auto;
+}
+#game-start, #game-over {
+    background: rgba(1, 1, 1, 0.8);
+}
+#counter text {
+    font-size: 130%;
+    fill: white;
+    stroke: black;
+    stroke-width: 1px;
+}
+#game-start text, #game-over text {
+    font-size: 150%;
+    fill: white;
+    text-anchor: middle;
+}
+#game-start #game-title, #game-over #end-title {
+    font-size: 400%;
+    fill: url(#title-fill);
+    stroke: black;
+}
+#game-start .status, #game-over .status {
+    font-size: 80%;
+}
+#game-start #you, #game-over #you {
+    font-size: 80%;
+    fill: red;
+}
+#game-start #start-countdown {
+    font-size: 600%;
+}
+#game-over {
+    #end-title {
+        fill: url(#game-over-fill);
+    }
+
+    .stats {
+        font-size: 75%;
+        text-anchor: start;
+    }
+
+    #rematch {
+        font-size: 500%;
+        fill: url(#game-over-fill);
+        stroke: black;
+    }
+}
+
