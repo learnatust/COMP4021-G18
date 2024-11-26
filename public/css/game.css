@@ -10,6 +10,7 @@ body {
     background-position: bottom;
     position: relative;
 }
+
 #home-page {
     position: absolute;
     width: 100vw;
@@ -17,17 +18,54 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-
-    #online-users-area {
-        width: 80%;
-        height: 50%;
-
-        span {
-            color: white;
-            cursor: pointer !important;
-        }
-    }
+    background: rgba(1, 1, 1, 0.8);
+    z-index: 1000;
 }
+#home-content {
+    text-align: center;
+    width: 80%;
+    height: 50%;
+}
+#home-title {
+    font-size: 400%;
+    fill: url(#home-fill);
+    stroke: black;
+}
+#online-users-area {
+    margin-top: 2em;
+    width: 80%;
+    height: 50%;
+    margin: 2em auto;
+    text-align: center;
+}
+.field-content {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1em;
+    margin: 1em 0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+.field-content:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+.user-name {
+    color: white;
+    font-size: 1.2em;
+    text-align: center;
+    width: 100%;
+}
+.shadow {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.row {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    justify-content: center;
+}
+
 #game-container {
     position: relative;
     width: 1000px;
