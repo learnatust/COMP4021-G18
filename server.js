@@ -199,6 +199,13 @@ function opponentSocketId(fromSocketId, fromPlayerId) {
     return games[onlineUsers[fromSocketId].gameId][opponentPlayerId];
 }
 
+function leaveGame(gameId, fromPlayerId, fromSocketId) {
+    delete games[gameId][fromPlayerId];
+    if (Object.keys(games[gameId]).length == 0) 
+        delete games[gameId];
+    onlineUsers[fromSocketId].gameId = null;
+}
+
 io.on("connect", (socket) => {
     // const user = socket.request.session.user;
     // if (user) {
@@ -223,7 +230,8 @@ io.on("connect", (socket) => {
             const fromPlayerId = games[gameId][0] == socket.id ? 0 : 1;
             io.to(opponentSocketId(socket.id, fromPlayerId))
                 .emit("opponent rematch", false);
-            delete games[gameId][fromPlayerId];
+
+            leaveGame(gameId, fromPlayerId, socket.id);
         }
         delete onlineUsers[socket.id];
     })
@@ -283,11 +291,11 @@ io.on("connect", (socket) => {
         io.to(opponentSocketId(socket.id, fromPlayerId))
             .emit("opponent rematch", false);
 
-        const gameId = onlineUsers[socket.id].gameId;
-        delete games[gameId][fromPlayerId];
-        if (Object.keys(games[gameId]).length == 0) 
-            delete games[gameId];
-        onlineUsers[socket.id].gameId = null;
+        leaveGame(
+            onlineUsers[socket.id].gameId, 
+            fromPlayerId, 
+            socket.id
+        );
         console.log("games: ", games);
     });
 
