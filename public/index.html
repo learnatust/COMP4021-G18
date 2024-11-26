@@ -100,7 +100,11 @@
             background: new Audio("./assets/background.mp3"),
             heal: new Audio("./assets/heal.mp3"),
             trap: new Audio("./assets/trap.mp3"),
-            gameover: new Audio("./assets/gameover.mp3")
+            hurt: new Audio("./assets/hurt.mp3"),
+            death: new Audio("./assets/death.mp3"),
+            gameover: new Audio("./assets/gameover.mp3"),
+            lightning: new Audio("./assets/lightning.mp3"),
+            darkbolt: new Audio("./assets/dark_bolt.mp3"),
         };
 
         const showHeartTime = 5000;
@@ -338,7 +342,7 @@
 
                 /* Hide the start screen */
                 $("#game-start").hide();
-                sounds.background.play();
+                playAudio("background");
 
                 /* Handle the keydown of arrow keys and spacebar */
                 $(document).on("keydown", function(event) {
@@ -382,20 +386,24 @@
                     const x = event.clientX - cvRect.left + 8;
                     const y = event.clientY - cvRect.top + 8;
                     const isLightning = localPlayer.id == 0;
-                    const sprite = Sprite(context, x, y, { type: "attack", isLightning });
                     Socket.attack(x, y);
 
                     const timing = 60;
                     const delayFrame = 6;
 
+                    const sprite = Sprite(context, x, y, { type: "attack", isLightning });
                     attackSprite(sprite, isLightning, timing, localPlayer.cheat ? 4 : 2);
-
                     localPlayer.attack = sprite;
+
+                    if (isLightning) playAudio("lightning")
+                    else playAudio("darkbolt");
 
                     setTimeout(() => {
                         if (opponent.sprite.getBoundingBox().intersect(sprite.getBoundingBox())) {
                             console.log("HIT opponent!!!");
-                            if (opponent.sprite.hurt()) {
+                            const die = opponent.sprite.hurt();
+                            die ? playAudio("death") : playAudio("hurt");
+                            if (die) {
                                 endGameTime = performance.now();
                                 opponent.key = 0;
                             }
@@ -561,9 +569,8 @@
                 writeStats(winnerId);
                 $("#game-over").show();
 
-                sounds.background.pause();
-                sounds.heal.pause();
-                sounds.gameover.play();
+                pauseAudio();
+                playAudio("gameover");
                 return
             }
 
@@ -640,8 +647,7 @@
 
                     // Heal sound
                     if (localPlayerHit || opponentHit) {
-                        sounds.heal.currentTime = 0.1;
-                        sounds.heal.play();
+                        playAudio("heal");
                         heart = null;
                     }
 
@@ -680,8 +686,7 @@
                         // Trap sound and animation
                         if (localPlayerHit || opponentHit) {
                             if (trap.trap.sequence.count == 1) {
-                                sounds.trap.currentTime = 0.1;
-                                sounds.trap.play();
+                                playAudio("trap");
 
                                 trap.trap.trigger();
                                 trap.lastTriggerTime = now;
@@ -691,14 +696,18 @@
                         // Player damage animation
                         if (localPlayerHit) {
                             localPlayer.trapCount++;
+                            const die = localPlayer.sprite.hurt();
+                            die ? playAudio("death") : playAudio("hurt");
 
-                            if (localPlayer.sprite.hurt()) {
+                            if (die) {
                                 endGameTime = now;
                                 localPlayer.key = 0;
                             }    
                         }
                         if (opponentHit) {
                             opponent.trapCount++;
+                            const die = opponent.sprite.hurt();
+                            die ? playAudio("death") : playAudio("hurt");
 
                             if (opponent.sprite.hurt()) {
                                 endGameTime = now;
@@ -727,6 +736,23 @@
 
             /* Process the next frame */
             requestAnimationFrame(doFrame);
+        }
+
+        function playAudio(name) {
+            let startTime = 0;
+
+            if (name == "trap" || name == "heal") startTime = 0.1;
+            else if (name == "background") sounds[name].loop = true;
+
+            sounds[name].currentTime = startTime;
+            sounds[name].play();
+        }
+
+        function pauseAudio() {
+            for (const soundName in sounds) {
+                if (soundName == "gameover") continue;
+                sounds[soundName].pause();
+            }
         }
     });
     </script>
