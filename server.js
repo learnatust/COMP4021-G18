@@ -221,6 +221,8 @@ io.on("connect", (socket) => {
         const gameId = onlineUsers[socket.id].gameId;
         if (gameId != null) {
             const fromPlayerId = games[gameId][0] == socket.id ? 0 : 1;
+            io.to(opponentSocketId(socket.id, fromPlayerId))
+                .emit("opponent rematch", false);
             delete games[gameId][fromPlayerId];
         }
         delete onlineUsers[socket.id];
