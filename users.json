@@ -1,0 +1,27 @@
+{
+  "tony": {
+    "avatar": "Owl",
+    "name": "Tony Lee",
+    "password": "$2b$10$Yxb2fSgA5RFn9Oz9TxjLLuve/GiPXCs2DWVFhyFDr4qz39qglwp8e"
+  },
+  "may": {
+    "avatar": "Rabbit",
+    "name": "May Wong",
+    "password": "$2b$10$gLc3Ri9W6P650EKKbexw6uvirV8Bar7gmvAtMcoMiPiR3rsY50GVu"
+  },
+  "Darrin123": {
+    "username": "Darrin123",
+    "name": "Darrin",
+    "password": "$2b$10$92IixT.URO67LKYasQvqrOwug3kK3xCd3XMXlsapAxS/.RoK5sN8u"
+  },
+  "Kamil123": {
+    "username": "Kamil123",
+    "name": "Kamil",
+    "password": "$2b$10$e89yCSNvziLr98gZ4CJspOjeFjp3iE/lzH7BhlH7skAp5QXF5TEQq"
+  },
+  "Adrian123": {
+    "username": "Adrian123",
+    "name": "Adrian",
+    "password": "$2b$10$XFo6KDKJysH/tlcOpfocK.ZD8wL.Z42iAFqnH1/wv4.66UO30.6ye"
+  }
+}
