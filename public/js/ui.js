@@ -1,6 +1,102 @@
 const OnlineUsersPanel = (function() {
     // This function initializes the UI
-    const initialize = function() {};
+    const initialize = function() {
+
+        // Handle when registration form is submitted
+        $("#authSignUpForm").on("submit", (e) => {
+            // Do not submit the form
+            e.preventDefault();
+
+            // Get the input fields
+            const username = $("#authSignUpUsername").val().trim();
+            const name     = $("#authSignUpName").val().trim();
+            const password = $("#authSignUpPassword").val().trim();
+            const confirmPassword = $("#authSignUpConfirmPassword").val().trim();
+
+            console.log(password)
+
+            // Password and confirmation does not match
+            if (password != confirmPassword) {
+                $("#register-message").text("Passwords do not match.");
+                return;
+            }
+
+            // Send a register request
+            const data = JSON.stringify({username, name, password});
+
+            // Sending the AJAX request to the server
+            // Processing any error returned by the server
+            // Handling the success response from the server
+            fetch("/register", {
+                method: "POST",
+                headers: { "Content-type": "application/json" },
+                body: data
+            })
+            .then((res) => res.json() )
+            .then((json) => {
+                if (json.status == "success") {
+                    $("#register-message").text("You can sign in now!");
+                }else {
+                    $("#register-message").text(json.error);
+                }
+            })
+            .catch((err) => {
+                console.log("Error!");
+            });
+
+        });
+
+    };
+
+    // Handle when sign in form is submitted
+    $("#authSignInForm").on("submit", (e) => {
+        
+        e.preventDefault();
+
+        // Get the input fields
+        const username = $("#authSignInUsername").val().trim();
+        const password = $("#authSignInPassword").val().trim();
+
+        // Send a signin request
+        const data = JSON.stringify({username, password});
+
+        // Sending the AJAX request to the server
+        // Processing any error returned by the server
+        // Handling the success response from the server
+        fetch("/signin", {
+            method: "POST",
+            headers: { "Content-type": "application/json" },
+            body: data
+        })
+        .then((res) => res.json() )
+        .then((json) => {
+            if (json.status == "success") {
+                user = json.user;
+                document.querySelector(".auth-container").style.display = "none";
+                document.getElementById("home-page").style.visibility = "visible";
+                Socket.connect();
+            }
+            else {
+                $("#signin-message").text("Username or password incorrect!");
+            }
+        })
+        .catch((err) => {
+            console.log("Error!");
+        });
+
+
+
+        //UserPanel.update(Authentication.getUser());
+        //UserPanel.show();
+        //Socket.connect();
+
+
+
+    });
+
+
+
+
 
     // This function updates the online users panel
     const update = function(onlineUsers) {
