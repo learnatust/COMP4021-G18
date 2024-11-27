@@ -8,7 +8,7 @@ const session = require("express-session");
 const app = express();
 
 // Use the 'public' folder to serve static files
-app.use(express.static("public"));
+app.use(express.static("/Users/darrinlou/Downloads/COMP4021_Project/public"));
 
 // Use the json middleware to parse JSON data
 app.use(express.json());
@@ -30,98 +30,66 @@ function containWordCharsOnly(text) {
 
 // Handle the /register endpoint
 app.post("/register", (req, res) => {
-    // Get the JSON data from the body
-    const { username, avatar, name, password } = req.body;
-
-    //
-    // D. Reading the users.json file
-    //
-    let users = JSON.parse(fs.readFileSync("data/users.json"));
-
-    //
-    // E. Checking for the user data correctness
-    //
-    if (!username) {
-        res.json({ status: "error", error: "Empty username." });
-        return;
-    }
-    if (!avatar) {
-        res.json({ status: "error", error: "Empty avatar." });
-        return;
-    }
-    if (!name) {
-        res.json({ status: "error", error: "Empty name." });
-        return;
-    }
-    if (!password) {
-        res.json({ status: "error", error: "Empty password." });
-        return;
-    }
-
-    if (!containWordCharsOnly(username)) {
-        res.json({ status: "error", error: "Username contains characters other than underscores, letters or numbers." });
-        return;
-    }
-
-    if (username in users) {
-        res.json({ status: "error", error: "User already exists." });
-        return;
-    }
-
-    //
-    // G. Adding the new user account
-    //
-    const hash = bcrypt.hashSync(password, 10);
     
+    // Get the JSON data from the body
+    const { username, name, password } = req.body;
 
-    //
-    // H. Saving the users.json file
-    //
-    users[username] = { avatar, name, password: hash };
-    fs.writeFileSync("data/users.json", JSON.stringify(users, null, " "));
+    // Reading the users.json file
+    const users = JSON.parse(fs.readFileSync("/Users/darrinlou/Downloads/COMP4021_Project/data/users.json"));
 
-    //
-    // I. Sending a success response to the browser
-    //
+    // Checking for the user data correctness
+    if (!username || !name || !password) {
+        res.json({ status: "error", error: "All fields (username, name, and password) are required." });
+    }
+
+    // Check if the username contains only underscores, letters, or numbers
+    if (!containWordCharsOnly(username)) {
+        res.json({ status: "error", error: "Username can only contain letters, numbers, and underscores." });
+    }
+
+    // Check if the username already exists in the users list
+    if (username in users) {
+        res.json({ status: "error", error: "Username already exists." });
+    }
+
+    // Adding the new user account
+    const hash = bcrypt.hashSync(password, 10);
+    users[username] = { username, name, password:hash };
+
+    // Saving the users.json file
+    fs.writeFileSync("/Users/darrinlou/Downloads/COMP4021_Project/data/users.json", JSON.stringify(users, null, "  "));
+    
+    // Sending a success response to the browser
     res.json({ status: "success" });
 
-    // Delete when appropriate
-    // res.json({ status: "error", error: "This endpoint is not yet implemented." });
 });
 
 // Handle the /signin endpoint
 app.post("/signin", (req, res) => {
+    
     // Get the JSON data from the body
     const { username, password } = req.body;
 
-    //
-    // D. Reading the users.json file
-    //
-    const users = JSON.parse(fs.readFileSync("data/users.json"));
+    // Reading the users.json file
+    const users = JSON.parse(fs.readFileSync("/Users/darrinlou/Downloads/COMP4021_Project/data/users.json"));
 
-    //
-    // E. Checking for username/password
-    //
-    if (!(username in users)) {
-        res.json({ status: "error", error: "User does not exist." });
-        return;
+    // Checking for username/password
+    // Sending a success response with the user account
+    if (username in users) {
+
+        const hashedPassword = users[username].password;
+        if (!bcrypt.compareSync(password, hashedPassword)) {
+            res.json({ status: "error", error: "Password incorrect!" });
+        }else {
+            const name = users[username].name;
+            req.session.user = { username, name };
+            res.json({ status: "success", user: { username, name } });
+        }
+        
+    }else {
+        res.json({ status: "error", error: "Username does not exists!" });
     }
 
-    const user = users[username];
-    if (!bcrypt.compareSync(password, user.password)) {
-        res.json({ status: "error", error: "Wrong password." });
-        return;
-    }
-
-    //
-    // G. Sending a success response with the user account
-    //
-    const userAccount = { username, avatar: user.avatar, name: user.name };
-    req.session.user = userAccount;
-    res.json({ status: "success", user: userAccount });
- 
-    // Delete when appropriate
-    // res.json({ status: "error", error: "This endpoint is not yet implemented." });
 });
 
 // Handle the /validate endpoint
@@ -207,14 +175,28 @@ function leaveGame(gameId, fromPlayerId, fromSocketId) {
 }
 
 io.on("connect", (socket) => {
+
     // const user = socket.request.session.user;
     // if (user) {
     //     onlineUsers[user.username] = { avatar: user.avatar, name: user.name, socketId: socket.id };
     //     io.emit("add user", JSON.stringify(user));
     // }
 
-    onlineUsers[socket.id] = { name: socket.id, gameId: null };
-    io.emit("add user", socket.id, onlineUsers[socket.id]);
+    //onlineUsers[socket.id] = { name: socket.id, gameId: null };
+    //io.emit("add user", socket.id, onlineUsers[socket.id]);
+
+    const user = socket.request.session.user;
+    if (user) {
+        // Store user info with socket.id as key, but include actual user data
+        onlineUsers[socket.id] = { 
+            name: user.name,  // Use actual user name instead of socket id
+            username: user.username,
+            gameId: null 
+        };
+        
+        // Broadcast to all clients
+        io.emit("add user", socket.id, onlineUsers[socket.id]);
+    }
 
     socket.on("disconnect", () => {
         // if (user) {
@@ -307,5 +289,5 @@ io.on("connect", (socket) => {
 
 // Use a web server to listen at port 8000
 httpServer.listen(8000, () => {
-    console.log("The game server has started...");
+    console.log("The chat server has started...");
 });
