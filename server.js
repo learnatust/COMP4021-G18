@@ -8,7 +8,7 @@ const session = require("express-session");
 const app = express();
 
 // Use the 'public' folder to serve static files
-app.use(express.static("/Users/darrinlou/Downloads/COMP4021_Project/public"));
+app.use(express.static("public"));
 
 // Use the json middleware to parse JSON data
 app.use(express.json());
@@ -35,7 +35,7 @@ app.post("/register", (req, res) => {
     const { username, name, password } = req.body;
 
     // Reading the users.json file
-    const users = JSON.parse(fs.readFileSync("/Users/darrinlou/Downloads/COMP4021_Project/users.json"));
+    const users = JSON.parse(fs.readFileSync("users.json"));
 
     // Checking for the user data correctness
     if (!username || !name || !password) {
@@ -57,7 +57,7 @@ app.post("/register", (req, res) => {
     users[username] = { username, name, password:hash };
 
     // Saving the users.json file
-    fs.writeFileSync("/Users/darrinlou/Downloads/COMP4021_Project/users.json", JSON.stringify(users, null, "  "));
+    fs.writeFileSync("users.json", JSON.stringify(users, null, "  "));
     
     // Sending a success response to the browser
     res.json({ status: "success" });
@@ -71,7 +71,7 @@ app.post("/signin", (req, res) => {
     const { username, password } = req.body;
 
     // Reading the users.json file
-    const users = JSON.parse(fs.readFileSync("/Users/darrinlou/Downloads/COMP4021_Project/users.json"));
+    const users = JSON.parse(fs.readFileSync("users.json"));
 
     // Checking for username/password
     // Sending a success response with the user account
@@ -207,17 +207,13 @@ io.on("connect", (socket) => {
 
         io.emit("remove user", onlineUsers[socket.id]);
 
- 
-
-            const gameId = onlineUsers[socket.id].gameId;
-            if (gameId != null) {
-                const fromPlayerId = games[gameId][0] == socket.id ? 0 : 1;
-                io.to(opponentSocketId(socket.id, fromPlayerId))
-                    .emit("opponent rematch", false);
-
-                leaveGame(gameId, fromPlayerId, socket.id);
-            }
-            delete onlineUsers[socket.id];
+    const gameId = onlineUsers[socket.id].gameId;
+        if (gameId != null) {
+            const fromPlayerId = games[gameId][0] == socket.id ? 0 : 1;
+            io.to(opponentSocketId(socket.id, fromPlayerId)).emit("opponent rematch", false);
+            leaveGame(gameId, fromPlayerId, socket.id);
+        }
+        delete onlineUsers[socket.id];
     })
 
     socket.on("create game", opponentSocketId => {
