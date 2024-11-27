@@ -4,9 +4,183 @@
     <title>Collect the Gems!</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P" rel="stylesheet">
     <link href="./css/game.css" rel="stylesheet">
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In / Sign Up</title>
 </head>
+<style>
+    .auth-container {
+        display: flex;
+        width: 90%;
+        max-width: 1100px;
+        background: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2000;
+    }
+
+    .game-details-container {
+        flex: 1;
+        background: #6a11cb;
+        color: #fff;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .game-details-container h1 {
+        font-family: Arial, sans-serif;
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .game-details-container p {
+        font-family: Arial, sans-serif;
+        font-size: 18px;
+        line-height: 1.6;
+        color: #f3f3f3;
+    }
+
+    .form-box {
+        flex: 1;
+        padding: 40px;
+    }
+
+    .form-box.auth-sign-in {
+        background: #f9f9f9;
+    }
+
+    .form-box h2 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #333;
+        font-family: Arial, sans-serif;
+    }
+
+    .form-box label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #555;
+        font-family: Arial, sans-serif;
+    }
+
+    .form-box input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+    }
+
+    .form-box button {
+        width: 100%;
+        padding: 10px;
+        background: #6a11cb;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        font-family: Arial, sans-serif;
+    }
+
+    .form-box button:hover {
+        background: #2575fc;
+    }
+
+    .form-box p {
+        text-align: center;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #777;
+        font-family: Arial, sans-serif;
+    }
+
+    .warningcenter {
+        text-align: center;
+        margin-top: 18px;
+        font-size: 15px;
+        color: red;
+        font-family: Arial, sans-serif;
+    }
+
+    @media (max-width: 768px) {
+        .auth-container {
+            flex-direction: column;
+        }
+
+        .game-details-container {
+            padding: 20px;
+        }
+
+        .form-box {
+            padding: 20px;
+        }
+    }
+</style>
 <body>
-    <div id="home-page">
+
+    <div class="auth-container">
+        <div class="game-details-container">
+            <h1>Magic Duel</h1>
+            <p>
+                THIS IS GAME INSTRUCTIONS. THIS IS GAME INSTRUCTIONS. THIS IS GAME INSTRUCTIONS. 
+                THIS IS GAME INSTRUCTIONS. THIS IS GAME INSTRUCTIONS. THIS IS GAME INSTRUCTIONS.
+            </p>
+        </div>
+
+        <div class="form-box auth-sign-in">
+            <h2>Sign In</h2>
+            <form id="authSignInForm">
+                <label for="authSignInUsername">Username</label>
+                <input type="text" id="authSignInUsername" placeholder="Enter your username" required>
+                
+                <label for="authSignInPassword">Password</label>
+                <input type="password" id="authSignInPassword" placeholder="Enter your password" required>
+                
+                <button type="submit" id="authSignInSubmit">Sign In</button>
+                <text id="signin-message" class="warningcenter"><text>
+                <p>Don't have an account? Register on the left!</p>
+            </form>
+        </div>
+
+        <div class="form-box">
+            <h2>Register</h2>
+            <form id="authSignUpForm">
+                <label for="authSignUpUsername">Username</label>
+                <input type="text" id="authSignUpUsername" placeholder="Choose a username" required>
+                
+                <label for="authSignUpName">Name</label>
+                <input type="text" id="authSignUpName" placeholder="Enter your full name" required>
+                
+                <label for="authSignUpPassword">Password</label>
+                <input type="password" id="authSignUpPassword" placeholder="Create a password" required>
+                
+                <label for="authSignUpConfirmPassword">Confirm Password</label>
+                <input type="password" id="authSignUpConfirmPassword" placeholder="Confirm your password" required>
+                
+                <button type="submit" id="authSignUpSubmit">Register</button>
+                <text id="register-message" class="warningcenter"><text>
+                <p>Already have an account? Sign in on the right!</p>
+            </form>
+        </div>
+    </div>
+
+    <div id="home-page" style="visibility: hidden">
         <div id="home-content">
             <svg width="100%" height="200">
                 <defs>
@@ -112,6 +286,8 @@
     <script src="./js/ui.js"></script>
     <script>
     $(function() {
+        OnlineUsersPanel.initialize();
+
         /* Get the canvas and 2D context */
         const cv = $("canvas").get(0);
         const context = cv.getContext("2d");
