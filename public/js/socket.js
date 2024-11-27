@@ -35,6 +35,39 @@ const Socket = (function() {
         socket.on("remove user", (user) => {
             OnlineUsersPanel.removeUser(user);
         });
+
+        socket.on("playerId", id => {
+            setPlayerId(id);
+            Game.playerId(id);
+        });
+
+        socket.on("join game", () => {
+            Game.joinGame();
+        });
+
+        socket.on("opponent ready", () => {
+            Game.opponentReady();
+        });
+
+        socket.on("opponent cheat", cheat => {
+            Game.opponentCheat(chear);
+        });
+
+        socket.on("opponent action", (type, keyCode) => {
+            Game.opponentAction(type, keyCode);
+        });
+
+        socket.on("opponent attack", (x, y) => {
+            Game.opponentAttack(x, y);
+        });
+
+        socket.on("random result", (type, x, y) => {
+            Game.randomResult(type, x, y);
+        });
+
+        socket.on("opponent rematch", rematch => {
+            Game.opponentRematch(rematch);
+        });
     };
 
     // This function disconnects the socket from the server
