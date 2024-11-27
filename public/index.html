@@ -40,13 +40,21 @@
         font-family: Arial, sans-serif;
         font-size: 36px;
         font-weight: bold;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
         text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
     }
 
-    .game-details-container p {
+    .game-details-container h3 {
         font-family: Arial, sans-serif;
-        font-size: 18px;
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 6.5px;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .game-details-container ol {
+        font-family: Arial, sans-serif;
+        font-size: 13px;
         line-height: 1.6;
         color: #f3f3f3;
     }
@@ -137,10 +145,21 @@
     <div class="auth-container">
         <div class="game-details-container">
             <h1>Magic Duel</h1>
-            <p>
-                THIS IS GAME INSTRUCTIONS. THIS IS GAME INSTRUCTIONS. THIS IS GAME INSTRUCTIONS. 
-                THIS IS GAME INSTRUCTIONS. THIS IS GAME INSTRUCTIONS. THIS IS GAME INSTRUCTIONS.
-            </p>
+            <h3>Game Instructions</h3>
+            <ol>
+                <li>Game is played between two players</li>
+                <li>Users who have not registered must register and then log in</li>
+                <li>After logging in, you can see the names of online users</li>
+                <li>Click on the name of the user you want to play with</li>
+                <li>After that, click on the character image to start the game</li>
+                <li>During the game, each player has 3 lives</li>
+                <li>Move your character using the keys: W (upward), A (left), S (downward), D (right)</li>
+                <li>Collecting hearts will increase your lives by 1, while falling into traps will cause you to lose 1 life</li>
+                <li>You can attack another player by clicking on their character</li>
+                <li>When you are attacked, you will lose 1 life</li>
+                <li>There is a cheat code: by hitting the spacebar, your attack area will be doubled</li>
+                <li>The player who first loses 3 lives loses the game</li>
+            </ol>
         </div>
 
         <div class="form-box auth-sign-in">
@@ -182,7 +201,7 @@
 
     <div id="home-page" style="visibility: hidden">
         <div id="home-content">
-            <svg width="100%" height="200">
+            <svg width="100%" height="220">
                 <defs>
                     <linearGradient
                         id="home-fill"
@@ -195,8 +214,11 @@
                         <stop offset="100%" style="stop-color: #ffa500" />
                     </linearGradient>
                 </defs>
-                <text id="home-title" x="50%" y="50%" text-anchor="middle">
+                <text id="home-title" x="50%" y="29%" text-anchor="middle">
                     MAGIC DUEL
+                </text>
+                <text id="online-users-title" x="50%" y="64%" text-anchor="middle">
+                    ONLINE USERS:
                 </text>
             </svg>
 
