@@ -31,10 +31,15 @@ body {
     fill: url(#home-fill);
     stroke: black;
 }
+#online-users-title {
+    font-size: 200%;
+    fill: url(#home-fill);
+    stroke: black;
+}
 #online-users-area {
     margin-top: 2em;
     width: 80%;
-    height: 50%;
+    height: 20%;
     margin: 2em auto;
     text-align: center;
 }
