@@ -307,5 +307,5 @@ io.on("connect", (socket) => {
 
 // Use a web server to listen at port 8000
 httpServer.listen(8000, () => {
-    console.log("The chat server has started...");
+    console.log("The game server has started...");
 });
