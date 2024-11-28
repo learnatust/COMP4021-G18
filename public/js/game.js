@@ -649,7 +649,7 @@ const Game = (function() {
 						const die = opponent.sprite.hurt();
 						die ? playAudio("death") : playAudio("hurt");
 
-						if (opponent.sprite.hurt()) {
+						if (die) {
 							endGameTime = now;
 							opponent.key = 0;
 						}
