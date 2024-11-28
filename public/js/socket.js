@@ -81,6 +81,8 @@ const Socket = (function() {
         if (socket && socket.connected) {
             playerId = 0;
             socket.emit("create game", opponentSocketId);
+            // Update local users panel immediately
+            socket.emit("get users");
         } 
     }
 
@@ -129,8 +131,11 @@ const Socket = (function() {
     }
 
     const leaveGame = function() {
-        if (socket && socket.connected)
+        if (socket && socket.connected) {
             socket.emit("leave game", playerId);
+            // Update local users panel immediately
+            socket.emit("get users");
+        }
     }
 
     return { 
