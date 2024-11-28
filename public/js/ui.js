@@ -62,6 +62,8 @@ const OnlineUsersPanel = (function() {
                     console.log("Error!");
                 });
 
+
+
         });
 
         // Handle when sign in form is submitted
@@ -95,6 +97,7 @@ const OnlineUsersPanel = (function() {
                         user = json.user;
                         $(".auth-container").hide();
                         document.getElementById("home-page").style.visibility = "visible";
+                        document.getElementById("users-name").innerText = user.name;
                         Socket.connect();
                     } else {
                         $("#signin-message").text("Username or password incorrect!");
@@ -104,15 +107,37 @@ const OnlineUsersPanel = (function() {
                     console.log("Error!");
                 });
 
-
-
             //UserPanel.update(Authentication.getUser());
             //UserPanel.show();
             //Socket.connect();
 
-
-
         });
+
+        $("#sign-out-btn").on("click", (e) => {
+            fetch("/signout", {
+                method: "GET"
+            })
+            .then((res) => res.json())
+            .then((json) => {
+                if (json.status == "success") {
+                    // Hide the home page
+                    document.getElementById("home-page").style.visibility = "hidden";
+                    // Show the auth container
+                    $(".auth-container").show();
+                    // Reset the sign-in form
+                    $("#authSignInForm").get(0).reset();
+                    // Clear any messages
+                    $("#signin-message").text("");
+                    $("#register-message").text("");
+                    // Disconnect socket
+                    Socket.disconnect();
+                }
+            })
+            .catch((err) => {
+                console.log("Error!");
+            });
+        });
+            
     };
 
     const validate = function(onSuccess, onError) {
@@ -148,16 +173,19 @@ const OnlineUsersPanel = (function() {
         // Add the user one-by-one
         for (const socketId in onlineUsers) {
             if (socketId != currentSocketId) {
-                onlineUsersArea.append(
-                    $("<div id='username-" + onlineUsers[socketId].name + "'></div>")
-                    .append(UI.getUserDisplay(onlineUsers[socketId]))
-                );
-
-                $(`#username-${onlineUsers[socketId].name}`).on("click", () => {
-                    Socket.createGame(socketId);
-                    $("#home-page").hide();
-                    $("#game-container").css("visibility", "visible");
-                });
+                const userDiv = $("<div id='username-" + onlineUsers[socketId].name + "'></div>")
+                    .append(UI.getUserDisplay(onlineUsers[socketId]));
+                
+                onlineUsersArea.append(userDiv);
+                
+                // Only add click handler if user is not in a game
+                if (onlineUsers[socketId].gameId === null) {
+                    $(`#username-${onlineUsers[socketId].name}`).on("click", () => {
+                        Socket.createGame(socketId);
+                        $("#home-page").hide();
+                        $("#game-container").css("visibility", "visible");
+                    });
+                }
             }
         }
     };
@@ -171,16 +199,19 @@ const OnlineUsersPanel = (function() {
 
         // Add the user
         if (userDiv.length == 0) {
-            onlineUsersArea.append(
-                $("<div id='username-" + user.name + "'></div>")
-                .append(UI.getUserDisplay(user))
-            );
+            const newUserDiv = $("<div id='username-" + user.name + "'></div>")
+                .append(UI.getUserDisplay(user));
+            
+            onlineUsersArea.append(newUserDiv);
 
-            $(`#username-${user.name}`).on("click", () => {
-                Socket.createGame(userSocketId);
-                $("#home-page").hide();
-                $("#game-container").css("visibility", "visible");
-            });
+            // Only add click handler if user is not in a game
+            if (user.gameId === null) {
+                $(`#username-${user.name}`).on("click", () => {
+                    Socket.createGame(userSocketId);
+                    $("#home-page").hide();
+                    $("#game-container").css("visibility", "visible");
+                });
+            }
         }
     };
 
@@ -204,13 +235,29 @@ const OnlineUsersPanel = (function() {
     };
 })();
 
-const UI = (function() {
+/*const UI = (function() {
     // This function gets the user display
     const getUserDisplay = function(user) {
         return $("<div class='field-content row shadow'></div>")
             // .append($("<span class='user-avatar'>" +
             //         Avatar.getCode(user.avatar) + "</span>"))
             .append($("<span class='user-name'>" + user.name + "</span>"));
+    };
+
+    return {
+        getUserDisplay
+    };
+})();*/
+const UI = (function() {
+    // This function gets the user display
+    const getUserDisplay = function(user) {
+        const status = user.gameId === null ? 
+            "<span class='status-online'>Online</span>" : 
+            "<span class='status-ingame'>In Game, Cannot pair up</span>";
+            
+        return $("<div class='field-content row shadow'></div>")
+            .append($("<span class='user-name'>" + user.name + "</span>"))
+            .append($("<span class='user-status'>" + status + "</span>"));
     };
 
     return {
