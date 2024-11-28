@@ -21,21 +21,25 @@ body {
     background: rgba(1, 1, 1, 0.8);
     z-index: 1000;
 }
+
 #home-content {
     text-align: center;
     width: 80%;
     height: 50%;
 }
+
 #home-title {
     font-size: 400%;
     fill: url(#home-fill);
     stroke: black;
 }
+
 #online-users-title {
     font-size: 200%;
     fill: url(#home-fill);
     stroke: black;
 }
+
 #online-users-area {
     margin-top: 2em;
     width: 80%;
@@ -43,6 +47,7 @@ body {
     margin: 2em auto;
     text-align: center;
 }
+
 .field-content {
     background: rgba(255, 255, 255, 0.1);
     padding: 1em;
@@ -52,18 +57,22 @@ body {
     transition: background-color 0.3s ease;
     text-align: center;
 }
+
 .field-content:hover {
     background: rgba(255, 255, 255, 0.2);
 }
+
 .user-name {
     color: white;
     font-size: 1.2em;
     text-align: center;
     width: 100%;
 }
+
 .shadow {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
 .row {
     display: flex;
     align-items: center;
@@ -77,53 +86,64 @@ body {
     height: 608px;
     box-shadow: rgb(0, 0, 0, 0.8) 0 0 80px 20px;
 }
+
 canvas, #counter, #game-start, #game-over {
     position: absolute;
     top: 0px;
     left: 0px;
 }
+
 canvas, #game-start, #game-over {
-/*    border: 1px solid gray;*/
+
+    /*    border: 1px solid gray;*/
     width: 100%;
-    height: 100%;
-    /*width: 1000px;
-    height: 608px;*/
+    height: 100%;    /*width: 1000px;
+            height: 608px;*/
 }
+
 canvas {
     background: url("../assets/bg3.jpg");
     background-size: cover;
     background-position: bottom;
     cursor: url("../assets/aim.png") 10 8, auto;
 }
+
 #game-start, #game-over {
     background: rgba(1, 1, 1, 0.8);
 }
+
 #counter text {
     font-size: 130%;
     fill: white;
     stroke: black;
     stroke-width: 1px;
 }
+
 #game-start text, #game-over text {
     font-size: 150%;
     fill: white;
     text-anchor: middle;
 }
+
 #game-start #game-title, #game-over #end-title {
     font-size: 400%;
     fill: url(#title-fill);
     stroke: black;
 }
+
 #game-start .status, #game-over .status {
     font-size: 80%;
 }
+
 #game-start #you, #game-over #you {
     font-size: 80%;
     fill: red;
 }
+
 #game-start #start-countdown {
     font-size: 600%;
 }
+
 #game-over {
     #end-title {
         fill: url(#game-over-fill);
@@ -139,5 +159,205 @@ canvas {
         fill: url(#game-over-fill);
         stroke: black;
     }
+
 }
 
+.auth-container {
+    display: flex;
+    width: 90%;
+    max-width: 1100px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+}
+
+.game-details-container {
+    flex: 1;
+    background: #6a11cb;
+    color: #fff;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.game-details-container h1 {
+    font-family: Arial, sans-serif;
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.game-details-container h3 {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 6.5px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.game-details-container ol {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #f3f3f3;
+}
+
+.form-box {
+    flex: 1;
+    padding: 40px;
+}
+
+.form-box.auth-sign-in {
+    background: #f9f9f9;
+}
+
+.form-box h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+    font-family: Arial, sans-serif;
+}
+
+.form-box label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+    font-family: Arial, sans-serif;
+}
+
+.form-box input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+}
+
+.form-box button {
+    width: 100%;
+    padding: 10px;
+    background: #6a11cb;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-family: Arial, sans-serif;
+}
+
+.form-box button:hover {
+    background: #2575fc;
+}
+
+.form-box p {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #777;
+    font-family: Arial, sans-serif;
+}
+
+.warningcenter {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 15px;
+    color: red;
+    font-family: Arial, sans-serif;
+}
+
+#user-info {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 8px 16px;
+    border-radius: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#user-info span {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+#sign-out-btn {
+    background: linear-gradient(45deg, #ff7e5f, #feb47b);
+    border: none;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#sign-out-btn:hover {
+    background: linear-gradient(45deg, #feb47b, #ff7e5f);
+    transform: scale(1.05);
+}
+
+#sign-out-btn:active {
+    transform: scale(0.95);
+}
+
+#users-name {
+    font-family: 'Arial', sans-serif;
+    position: relative;
+}
+
+.user-status {
+    margin-left: 10px;
+}
+
+.status-online {
+    color: #28a745;
+}
+
+.status-ingame {
+    color: #dc3545;
+}
+
+@media (max-width:768px) {
+    .auth-container {
+        flex-direction: column;
+    }
+
+    .game-details-container {
+        padding: 20px;
+    }
+
+    .form-box {
+        padding: 20px;
+    }
+
+    #user-info {
+        flex-direction: column;
+        gap: 5px;
+        padding: 10px;
+    }
+
+    #sign-out-btn {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+
+}
