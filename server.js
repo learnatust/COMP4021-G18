@@ -49,6 +49,7 @@ app.post("/register", (req, res) => {
             status: "error",
             error: "All fields (username, name, and password) are required."
         });
+        return;
     }
 
     // Check if the username contains only underscores, letters, or numbers
@@ -57,6 +58,7 @@ app.post("/register", (req, res) => {
             status: "error",
             error: "Username can only contain letters, numbers, and underscores."
         });
+        return;
     }
 
     // Check if the username already exists in the users list
@@ -65,6 +67,7 @@ app.post("/register", (req, res) => {
             status: "error",
             error: "Username already exists."
         });
+        return;
     }
 
     // Adding the new user account
