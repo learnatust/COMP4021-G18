@@ -173,7 +173,7 @@
                 
                 <button type="submit" id="authSignInSubmit">Sign In</button>
                 <text id="signin-message" class="warningcenter"><text>
-                <p>Don't have an account? Register on the left!</p>
+                <p>Don't have an account? Register on the right!</p>
             </form>
         </div>
 
@@ -194,7 +194,7 @@
                 
                 <button type="submit" id="authSignUpSubmit">Register</button>
                 <text id="register-message" class="warningcenter"><text>
-                <p>Already have an account? Sign in on the right!</p>
+                <p>Already have an account? Sign in on the left!</p>
             </form>
         </div>
     </div>
@@ -310,6 +310,7 @@
     <script>
     $(function() {
         OnlineUsersPanel.initialize();
+        OnlineUsersPanel.validate();
     });
     </script>
 </body>

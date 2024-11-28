@@ -19,7 +19,9 @@ const chatSession = session({
     resave: false,
     saveUninitialized: false,
     rolling: true,
-    cookie: { maxAge: 300000 }
+    cookie: {
+        maxAge: 300000
+    }
 });
 app.use(chatSession);
 
@@ -30,45 +32,67 @@ function containWordCharsOnly(text) {
 
 // Handle the /register endpoint
 app.post("/register", (req, res) => {
-    
+
     // Get the JSON data from the body
-    const { username, name, password } = req.body;
+    const {
+        username,
+        name,
+        password
+    } = req.body;
 
     // Reading the users.json file
     const users = JSON.parse(fs.readFileSync("users.json"));
 
     // Checking for the user data correctness
     if (!username || !name || !password) {
-        res.json({ status: "error", error: "All fields (username, name, and password) are required." });
+        res.json({
+            status: "error",
+            error: "All fields (username, name, and password) are required."
+        });
     }
 
     // Check if the username contains only underscores, letters, or numbers
     if (!containWordCharsOnly(username)) {
-        res.json({ status: "error", error: "Username can only contain letters, numbers, and underscores." });
+        res.json({
+            status: "error",
+            error: "Username can only contain letters, numbers, and underscores."
+        });
     }
 
     // Check if the username already exists in the users list
     if (username in users) {
-        res.json({ status: "error", error: "Username already exists." });
+        res.json({
+            status: "error",
+            error: "Username already exists."
+        });
     }
 
     // Adding the new user account
     const hash = bcrypt.hashSync(password, 10);
-    users[username] = { username, name, password:hash };
+    users[username] = {
+        username,
+        name,
+        password: hash
+    };
 
     // Saving the users.json file
     fs.writeFileSync("users.json", JSON.stringify(users, null, "  "));
-    
+
     // Sending a success response to the browser
-    res.json({ status: "success" });
+    res.json({
+        status: "success"
+    });
 
 });
 
 // Handle the /signin endpoint
 app.post("/signin", (req, res) => {
-    
+
     // Get the JSON data from the body
-    const { username, password } = req.body;
+    const {
+        username,
+        password
+    } = req.body;
 
     // Reading the users.json file
     const users = JSON.parse(fs.readFileSync("users.json"));
@@ -79,15 +103,30 @@ app.post("/signin", (req, res) => {
 
         const hashedPassword = users[username].password;
         if (!bcrypt.compareSync(password, hashedPassword)) {
-            res.json({ status: "error", error: "Password incorrect!" });
-        }else {
+            res.json({
+                status: "error",
+                error: "Password incorrect!"
+            });
+        } else {
             const name = users[username].name;
-            req.session.user = { username, name };
-            res.json({ status: "success", user: { username, name } });
+            req.session.user = {
+                username,
+                name
+            };
+            res.json({
+                status: "success",
+                user: {
+                    username,
+                    name
+                }
+            });
         }
-        
-    }else {
-        res.json({ status: "error", error: "Username does not exists!" });
+
+    } else {
+        res.json({
+            status: "error",
+            error: "Username does not exists!"
+        });
     }
 
 });
@@ -100,15 +139,21 @@ app.get("/validate", (req, res) => {
     //
     const user = req.session.user;
     if (user == undefined) {
-        res.json({ status: "error", error: "Not signed-in" });
+        res.json({
+            status: "error",
+            error: "Not signed-in"
+        });
         return;
     }
 
     //
     // D. Sending a success response with the user account
     //
-    res.json({ status: "success", user });
- 
+    res.json({
+        status: "success",
+        user
+    });
+
     // Delete when appropriate
     // res.json({ status: "error", error: "This endpoint is not yet implemented." });
 });
@@ -124,8 +169,10 @@ app.get("/signout", (req, res) => {
     //
     // Sending a success response
     //
-    res.json({ status: "success" })
- 
+    res.json({
+        status: "success"
+    })
+
     // Delete when appropriate
     // res.json({ status: "error", error: "This endpoint is not yet implemented." });
 });
@@ -169,57 +216,46 @@ function opponentSocketId(fromSocketId, fromPlayerId) {
 
 function leaveGame(gameId, fromPlayerId, fromSocketId) {
     delete games[gameId][fromPlayerId];
-    if (Object.keys(games[gameId]).length == 0) 
+    if (Object.keys(games[gameId]).length == 0)
         delete games[gameId];
     onlineUsers[fromSocketId].gameId = null;
 }
 
 io.on("connect", (socket) => {
-
-    // const user = socket.request.session.user;
-    // if (user) {
-    //     onlineUsers[user.username] = { avatar: user.avatar, name: user.name, socketId: socket.id };
-    //     io.emit("add user", JSON.stringify(user));
-    // }
-
-    //onlineUsers[socket.id] = { name: socket.id, gameId: null };
-    //io.emit("add user", socket.id, onlineUsers[socket.id]);
-
     const user = socket.request.session.user;
     if (user) {
         // Store user info with socket.id as key, but include actual user data
-        onlineUsers[socket.id] = { 
-            name: user.name,  // Use actual user name instead of socket id
+        onlineUsers[socket.id] = {
+            name: user.name, // Use actual user name instead of socket id
             username: user.username,
-            gameId: null 
+            gameId: null
         };
-        
+
         // Broadcast to all clients
         io.emit("add user", socket.id, onlineUsers[socket.id]);
     }
 
     socket.on("disconnect", () => {
-        // if (user) {
-        //     delete onlineUsers[user.username];
-        //     io.emit("remove user", JSON.stringify(user));
-        // }
-        // console.log(onlineUsers);
+        if (user) {
+            io.emit("remove user", onlineUsers[socket.id]);
 
-        io.emit("remove user", onlineUsers[socket.id]);
-
-    const gameId = onlineUsers[socket.id].gameId;
-        if (gameId != null) {
-            const fromPlayerId = games[gameId][0] == socket.id ? 0 : 1;
-            io.to(opponentSocketId(socket.id, fromPlayerId)).emit("opponent rematch", false);
-            leaveGame(gameId, fromPlayerId, socket.id);
+            const gameId = onlineUsers[socket.id].gameId;
+            if (gameId != null) {
+                const fromPlayerId = games[gameId][0] == socket.id ? 0 : 1;
+                io.to(opponentSocketId(socket.id, fromPlayerId)).emit("opponent rematch", false);
+                leaveGame(gameId, fromPlayerId, socket.id);
+            }
+            delete onlineUsers[socket.id];
         }
-        delete onlineUsers[socket.id];
     })
 
     socket.on("create game", opponentSocketId => {
         onlineUsers[socket.id].gameId = globalGameId;
         onlineUsers[opponentSocketId].gameId = globalGameId;
-        games[globalGameId] = { "0": socket.id, "1": opponentSocketId };
+        games[globalGameId] = {
+            "0": socket.id,
+            "1": opponentSocketId
+        };
         globalGameId++;
 
         socket.emit("playerId", 0);
@@ -272,8 +308,8 @@ io.on("connect", (socket) => {
             .emit("opponent rematch", false);
 
         leaveGame(
-            onlineUsers[socket.id].gameId, 
-            fromPlayerId, 
+            onlineUsers[socket.id].gameId,
+            fromPlayerId,
             socket.id
         );
         console.log("games: ", games);
