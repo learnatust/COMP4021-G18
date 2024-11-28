@@ -50,7 +50,7 @@ const Socket = (function() {
         });
 
         socket.on("opponent cheat", cheat => {
-            Game.opponentCheat(chear);
+            Game.opponentCheat(cheat);
         });
 
         socket.on("opponent action", (type, keyCode) => {
