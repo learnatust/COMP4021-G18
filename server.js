@@ -261,6 +261,9 @@ io.on("connect", (socket) => {
         socket.emit("playerId", 0);
         io.to(opponentSocketId).emit("playerId", 1);
         io.to(opponentSocketId).emit("join game");
+
+        // Broadcast updated user list to all clients
+        io.emit("users", onlineUsers);
     });
 
     socket.on("ready", fromPlayerId => {
@@ -312,6 +315,10 @@ io.on("connect", (socket) => {
             fromPlayerId,
             socket.id
         );
+
+        // Broadcast updated user list to all clients
+        io.emit("users", onlineUsers);
+        
         console.log("games: ", games);
     });
 
