@@ -23,5 +23,15 @@
     "username": "Adrian123",
     "name": "Adrian",
     "password": "$2b$10$XFo6KDKJysH/tlcOpfocK.ZD8wL.Z42iAFqnH1/wv4.66UO30.6ye"
+  },
+  "han": {
+    "username": "han",
+    "name": "Han",
+    "password": "$2b$10$kxYzQjSuYAEnQbrem7QxWO0x31k0ZcaznmS/qTVi7WV8/b2Mr0i3O"
+  },
+  "han2": {
+    "username": "han2",
+    "name": "Han2",
+    "password": "$2b$10$4ITTxQv0rOkVN6sN.nsYNeKZEljGCjou6OSIkb8rQXmKr8a4OpeIu"
   }
 }
