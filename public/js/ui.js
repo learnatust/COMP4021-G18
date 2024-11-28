@@ -1,4 +1,6 @@
 const OnlineUsersPanel = (function() {
+    let user = null;
+
     const show = function() {
         $(".auth-container").fadeIn(500);
     };
@@ -24,8 +26,6 @@ const OnlineUsersPanel = (function() {
             const name = $("#authSignUpName").val().trim();
             const password = $("#authSignUpPassword").val().trim();
             const confirmPassword = $("#authSignUpConfirmPassword").val().trim();
-
-            console.log(password)
 
             // Password and confirmation does not match
             if (password != confirmPassword) {
@@ -97,6 +97,7 @@ const OnlineUsersPanel = (function() {
                     if (json.status == "success") {
                         user = json.user;
                         $(".auth-container").hide();
+                        $("#landing-page").hide();
                         document.getElementById("home-page").style.visibility = "visible";
                         document.getElementById("users-name").innerText = user.name;
                         Socket.connect();
@@ -105,7 +106,7 @@ const OnlineUsersPanel = (function() {
                     }
                 })
                 .catch((err) => {
-                    console.log("Error!");
+                    console.log("Error!", err);
                 });
 
             //UserPanel.update(Authentication.getUser());
@@ -121,15 +122,10 @@ const OnlineUsersPanel = (function() {
             .then((res) => res.json())
             .then((json) => {
                 if (json.status == "success") {
+                    user = null;
                     // Hide the home page
                     document.getElementById("home-page").style.visibility = "hidden";
-                    // Show the auth container
-                    $(".auth-container").show();
-                    // Reset the sign-in form
-                    $("#authSignInForm").get(0).reset();
-                    // Clear any messages
-                    $("#signin-message").text("");
-                    $("#register-message").text("");
+                    $("#landing-page").show();
                     // Disconnect socket
                     Socket.disconnect();
                 }
@@ -139,6 +135,20 @@ const OnlineUsersPanel = (function() {
             });
         });
 
+        $("#play-btn").on("click", () => {
+            if (user != null) {
+                $("#landing-page").hide();
+                document.getElementById("home-page").style.visibility = "visible";
+            } else {
+                // Show the auth container
+                $(".auth-container").show();
+                // Reset the sign-in form
+                $("#authSignInForm").get(0).reset();
+                // Clear any messages
+                $("#signin-message").text("");
+                $("#register-message").text("");
+            }
+        }); 
     };
 
     const validate = function(onSuccess, onError) {
@@ -151,14 +161,15 @@ const OnlineUsersPanel = (function() {
 
                 if (json.status == "success") {
                     user = json.user;
-                    $(".auth-container").hide();
-                    document.getElementById("home-page").style.visibility = "visible";
+                    // $(".auth-container").hide();
+                    // document.getElementById("home-page").style.visibility = "visible";
                     document.getElementById("users-name").innerText = user.name;
                     Socket.connect();
-                } else { $(".auth-container").show(); };
+                } 
+                // else { $(".auth-container").show(); };
             })
             .catch((err) => {
-                console.log("Error!");
+                console.log("Error!", err);
             });
     }
 
