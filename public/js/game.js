@@ -294,7 +294,6 @@ const Game = (function() {
 				event.keyCode == 68
 			) {
 				if (localPlayer.key != event.keyCode) {
-					console.log("POST MOVE");
 					Socket.action("move", event.keyCode);
 				}
 				localPlayer.key = event.keyCode;
@@ -310,7 +309,6 @@ const Game = (function() {
 
 			if (localPlayer.key != event.keyCode) return;
 			localPlayer.sprite.stop(keyToDirection(event.keyCode));
-			console.log("POST STOP");
 			Socket.action("stop", event.keyCode);
 			localPlayer.key = 0;
 		});
