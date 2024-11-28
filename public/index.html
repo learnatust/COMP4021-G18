@@ -9,7 +9,7 @@
   <title>Sign In / Sign Up</title>
 </head>
 <style>
-    
+
 </style>
 <body>
 
@@ -38,10 +38,10 @@
             <form id="authSignInForm">
                 <label for="authSignInUsername">Username</label>
                 <input type="text" id="authSignInUsername" placeholder="Enter your username" required>
-                
+
                 <label for="authSignInPassword">Password</label>
                 <input type="password" id="authSignInPassword" placeholder="Enter your password" required>
-                
+
                 <button type="submit" id="authSignInSubmit">Sign In</button>
                 <text id="signin-message" class="warningcenter"><text>
                 <p>Don't have an account? Register on the right!</p>
@@ -53,16 +53,16 @@
             <form id="authSignUpForm">
                 <label for="authSignUpUsername">Username</label>
                 <input type="text" id="authSignUpUsername" placeholder="Choose a username" required>
-                
+
                 <label for="authSignUpName">Name</label>
                 <input type="text" id="authSignUpName" placeholder="Enter your name" required>
-                
+
                 <label for="authSignUpPassword">Password</label>
                 <input type="password" id="authSignUpPassword" placeholder="Create a password" required>
-                
+
                 <label for="authSignUpConfirmPassword">Confirm Password</label>
                 <input type="password" id="authSignUpConfirmPassword" placeholder="Confirm your password" required>
-                
+
                 <button type="submit" id="authSignUpSubmit">Register</button>
                 <text id="register-message" class="warningcenter"><text>
                 <p>Already have an account? Sign in on the left!</p>
@@ -188,5 +188,17 @@
         OnlineUsersPanel.validate();
     });
     </script>
+
+    <!-- Invitation Modal -->
+    <div id="invitation-modal" class="game-modal">
+        <div class="modal-content">
+            <h3><span class="inviter-name"></span> invites you to play!</h3>
+            <div class="modal-buttons">
+                <button id="accept-invite-btn">Accept</button>
+                <button id="decline-invite-btn">Decline</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

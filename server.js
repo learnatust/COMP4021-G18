@@ -1,5 +1,4 @@
 const express = require("express");
-
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 const session = require("express-session");
@@ -198,14 +197,14 @@ io.use((socket, next) => {
 //     socket.id: {
 //         avatar: user.avatar,
 //         name: user.name,
-//         gameId: null (default) 
+//         gameId: null (default)
 //     }
 const onlineUsers = {};
 
-// games object: 
+// games object:
 //     gameId: {
 //         0 (playerId - 0/1): socket.id
-//         1 (playerId - 0/1): socket.id    
+//         1 (playerId - 0/1): socket.id
 //     }
 let globalGameId = 0;
 let games = {};
@@ -252,21 +251,60 @@ io.on("connect", (socket) => {
         }
     })
 
-    socket.on("create game", opponentSocketId => {
-        onlineUsers[socket.id].gameId = globalGameId;
-        onlineUsers[opponentSocketId].gameId = globalGameId;
-        games[globalGameId] = {
-            "0": socket.id,
-            "1": opponentSocketId
-        };
-        globalGameId++;
+    // socket.on("create game", opponentSocketId => {
+    //     onlineUsers[socket.id].gameId = globalGameId;
+    //     onlineUsers[opponentSocketId].gameId = globalGameId;
+    //     games[globalGameId] = {
+    //         "0": socket.id,
+    //         "1": opponentSocketId
+    //     };
+    //     globalGameId++;
 
-        socket.emit("playerId", 0);
-        io.to(opponentSocketId).emit("playerId", 1);
-        io.to(opponentSocketId).emit("join game");
+    //     socket.emit("playerId", 0);
+    //     io.to(opponentSocketId).emit("playerId", 1);
+    //     io.to(opponentSocketId).emit("join game");
 
-        // Broadcast updated user list to all clients
-        io.emit("users", onlineUsers);
+    //     // Broadcast updated user list to all clients
+    //     io.emit("users", onlineUsers);
+    // });
+
+    socket.on("send invitation", (targetSocketId) => {
+        if (user) {
+            io.to(targetSocketId).emit("receive invitation", {
+                socketId: socket.id,
+                name: user.name
+            });
+        }
+    });
+
+    socket.on("accept invitation", (inviterSocketId) => {
+        if (user) {
+            // Set up the game for both players
+            onlineUsers[socket.id].gameId = globalGameId;
+            onlineUsers[inviterSocketId].gameId = globalGameId;
+            games[globalGameId] = {
+                "0": inviterSocketId,  // Inviter is player 0
+                "1": socket.id         // Accepter is player 1
+            };
+            globalGameId++;
+
+            // Send player IDs and start the game
+            io.to(inviterSocketId).emit("playerId", 0);
+            socket.emit("playerId", 1);
+            io.to(inviterSocketId).emit("join game");
+            socket.emit("join game");
+
+            // Broadcast updated user list to all clients
+            io.emit("users", onlineUsers);
+        }
+    });
+
+    socket.on("decline invitation", (inviterSocketId) => {
+        if (user) {
+            io.to(inviterSocketId).emit("invitation declined", {
+                name: user.name
+            });
+        }
     });
 
     socket.on("ready", fromPlayerId => {
@@ -321,8 +359,6 @@ io.on("connect", (socket) => {
 
         // Broadcast updated user list to all clients
         io.emit("users", onlineUsers);
-        
-        console.log("games: ", games);
     });
 
     socket.on("get users", () => {

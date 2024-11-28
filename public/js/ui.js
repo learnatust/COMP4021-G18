@@ -138,7 +138,7 @@ const OnlineUsersPanel = (function() {
                 console.log("Error!");
             });
         });
-            
+
     };
 
     const validate = function(onSuccess, onError) {
@@ -165,28 +165,20 @@ const OnlineUsersPanel = (function() {
     // This function updates the online users panel
     const update = function(onlineUsers) {
         const onlineUsersArea = $("#online-users-area");
-
-        // Clear the online users area
         onlineUsersArea.empty();
 
-        // Get the current user
         const currentSocketId = Socket.getSocket().id;
 
-        // Add the user one-by-one
         for (const socketId in onlineUsers) {
             if (socketId != currentSocketId) {
                 const userDiv = $("<div id='username-" + onlineUsers[socketId].name + "'></div>")
                     .append(UI.getUserDisplay(onlineUsers[socketId]));
-                
+
                 onlineUsersArea.append(userDiv);
-                
-                // Only add click handler if user is not in a game
+
+                // Use the new initializeUserClick instead of direct game creation
                 if (onlineUsers[socketId].gameId === null) {
-                    $(`#username-${onlineUsers[socketId].name}`).on("click", () => {
-                        Socket.createGame(socketId);
-                        $("#home-page").hide();
-                        $("#game-container").css("visibility", "visible");
-                    });
+                    UI.initializeUserClick(socketId, onlineUsers[socketId]);
                 }
             }
         }
@@ -195,27 +187,21 @@ const OnlineUsersPanel = (function() {
     // This function adds a user in the panel
     const addUser = function(userSocketId, user) {
         const onlineUsersArea = $("#online-users-area");
-
-        // Find the user
         const userDiv = onlineUsersArea.find("#username-" + user.name);
 
-        // Add the user
         if (userDiv.length == 0) {
             const newUserDiv = $("<div id='username-" + user.name + "'></div>")
                 .append(UI.getUserDisplay(user));
-            
+
             onlineUsersArea.append(newUserDiv);
 
-            // Only add click handler if user is not in a game
+            // Use the new initializeUserClick instead of direct game creation
             if (user.gameId === null) {
-                $(`#username-${user.name}`).on("click", () => {
-                    Socket.createGame(userSocketId);
-                    $("#home-page").hide();
-                    $("#game-container").css("visibility", "visible");
-                });
+                UI.initializeUserClick(userSocketId, user);
             }
         }
     };
+
 
     // This function removes a user from the panel
     const removeUser = function(user) {
@@ -237,32 +223,55 @@ const OnlineUsersPanel = (function() {
     };
 })();
 
-/*const UI = (function() {
-    // This function gets the user display
-    const getUserDisplay = function(user) {
-        return $("<div class='field-content row shadow'></div>")
-            // .append($("<span class='user-avatar'>" +
-            //         Avatar.getCode(user.avatar) + "</span>"))
-            .append($("<span class='user-name'>" + user.name + "</span>"));
-    };
-
-    return {
-        getUserDisplay
-    };
-})();*/
 const UI = (function() {
     // This function gets the user display
     const getUserDisplay = function(user) {
-        const status = user.gameId === null ? 
-            "<span class='status-online'>Online</span>" : 
+        const status = user.gameId === null ?
+            "<span class='status-online'>Online</span>" :
             "<span class='status-ingame'>In Game, Cannot pair up</span>";
-            
-        return $("<div class='field-content row shadow'></div>")
+
+        return $("<div class='field-content row shadow' style='cursor: pointer;'></div>")
             .append($("<span class='user-name'>" + user.name + "</span>"))
-            .append($("<span class='user-status'>" + status + "</span>"));
+            .append($("<span class='user-status'>" + status + "</span>"))
+            .on('click', function() {
+                $(this).parent().trigger('click');
+            });
     };
 
+    const invitationModal = {
+            show: function(userData) {
+                $('.inviter-name').text(userData.name);
+
+                $('#accept-invite-btn').off().on('click', () => {
+                    Socket.acceptInvitation(userData.socketId);
+                    this.hide();
+                });
+
+                $('#decline-invite-btn').off().on('click', () => {
+                    Socket.declineInvitation(userData.socketId);
+                    this.hide();
+                });
+
+                $('#invitation-modal').css('display', 'flex');
+            },
+
+            hide: function() {
+                $('#invitation-modal').hide();
+            }
+        };
+
+        // Modify the click handler in OnlineUsersPanel.addUser
+        const initializeUserClick = function(userSocketId, user) {
+            $(document).on('click', `#username-${user.name}`, function() {
+                if (user.gameId === null) {
+                    Socket.sendInvitation(userSocketId);
+                }
+            });
+        };
+
     return {
-        getUserDisplay
+        getUserDisplay,
+        invitationModal,
+        initializeUserClick
     };
 })();

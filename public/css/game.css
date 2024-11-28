@@ -87,17 +87,21 @@ body {
     box-shadow: rgb(0, 0, 0, 0.8) 0 0 80px 20px;
 }
 
-canvas, #counter, #game-start, #game-over {
+canvas,
+#counter,
+#game-start,
+#game-over {
     position: absolute;
     top: 0px;
     left: 0px;
 }
 
-canvas, #game-start, #game-over {
-
+canvas,
+#game-start,
+#game-over {
     /*    border: 1px solid gray;*/
     width: 100%;
-    height: 100%;    /*width: 1000px;
+    height: 100%; /*width: 1000px;
             height: 608px;*/
 }
 
@@ -105,10 +109,13 @@ canvas {
     background: url("../assets/bg3.jpg");
     background-size: cover;
     background-position: bottom;
-    cursor: url("../assets/aim.png") 10 8, auto;
+    cursor:
+        url("../assets/aim.png") 10 8,
+        auto;
 }
 
-#game-start, #game-over {
+#game-start,
+#game-over {
     background: rgba(1, 1, 1, 0.8);
 }
 
@@ -119,23 +126,27 @@ canvas {
     stroke-width: 1px;
 }
 
-#game-start text, #game-over text {
+#game-start text,
+#game-over text {
     font-size: 150%;
     fill: white;
     text-anchor: middle;
 }
 
-#game-start #game-title, #game-over #end-title {
+#game-start #game-title,
+#game-over #end-title {
     font-size: 400%;
     fill: url(#title-fill);
     stroke: black;
 }
 
-#game-start .status, #game-over .status {
+#game-start .status,
+#game-over .status {
     font-size: 80%;
 }
 
-#game-start #you, #game-over #you {
+#game-start #you,
+#game-over #you {
     font-size: 80%;
     fill: red;
 }
@@ -159,7 +170,6 @@ canvas {
         fill: url(#game-over-fill);
         stroke: black;
     }
-
 }
 
 .auth-container {
@@ -307,7 +317,9 @@ canvas {
     padding: 6px 12px;
     border-radius: 20px;
     cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
+    transition:
+        background 0.3s ease,
+        transform 0.2s ease;
 }
 
 #sign-out-btn:hover {
@@ -320,7 +332,7 @@ canvas {
 }
 
 #users-name {
-    font-family: 'Arial', sans-serif;
+    font-family: "Arial", sans-serif;
     position: relative;
 }
 
@@ -336,7 +348,7 @@ canvas {
     color: #dc3545;
 }
 
-@media (max-width:768px) {
+@media (max-width: 768px) {
     .auth-container {
         flex-direction: column;
     }
@@ -359,5 +371,73 @@ canvas {
         font-size: 12px;
         padding: 5px 10px;
     }
+}
 
+.game-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(1, 1, 1, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2em;
+    border-radius: 10px;
+    text-align: center;
+    font-family: "Press Start 2P", sans-serif;
+    max-width: 90%;
+    width: 400px;
+    box-shadow: rgb(0, 0, 0, 0.8) 0 0 80px 20px;
+}
+
+.modal-content h3 {
+    color: white;
+    margin-bottom: 1.5em;
+    font-size: 1.2em;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 1em;
+    justify-content: center;
+}
+
+.modal-buttons button {
+    padding: 0.8em 1.5em;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s;
+    border: none;
+    font-family: "Press Start 2P", sans-serif;
+    font-size: 0.8em;
+}
+
+.modal-buttons button:hover {
+    transform: scale(1.05);
+}
+
+#accept-invite-btn {
+    background: linear-gradient(45deg, #6a11cb, #2575fc);
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#decline-invite-btn {
+    background: linear-gradient(45deg, #ff7e5f, #feb47b);
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#accept-invite-btn:active,
+#decline-invite-btn:active {
+    transform: scale(0.95);
 }

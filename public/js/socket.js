@@ -41,6 +41,14 @@ const Socket = (function() {
             Game.playerId(id);
         });
 
+        socket.on("receive invitation", (userData) => {
+            UI.invitationModal.show(userData);
+        });
+
+        socket.on("invitation declined", (userData) => {
+            // For now, no message saying that the invitation was declined
+        });
+
         socket.on("join game", () => {
             Game.joinGame();
         });
@@ -83,16 +91,34 @@ const Socket = (function() {
             socket.emit("create game", opponentSocketId);
             // Update local users panel immediately
             socket.emit("get users");
-        } 
+        }
     }
 
+    const sendInvitation = function(targetSocketId) {
+        if (socket && socket.connected) {
+            socket.emit("send invitation", targetSocketId);
+        }
+    };
+
+    const acceptInvitation = function(inviterSocketId) {
+        if (socket && socket.connected) {
+            socket.emit("accept invitation", inviterSocketId);
+        }
+    };
+
+    const declineInvitation = function(inviterSocketId) {
+        if (socket && socket.connected) {
+            socket.emit("decline invitation", inviterSocketId);
+        }
+    };
+
     const ready = function () {
-        if (socket && socket.connected)  
+        if (socket && socket.connected)
             socket.emit("ready", playerId);
     }
 
     const cheat = function (cheat) {
-        if (socket && socket.connected)  
+        if (socket && socket.connected)
             socket.emit("cheat", playerId, cheat);
     }
 
@@ -101,7 +127,7 @@ const Socket = (function() {
 
         if (socket && socket.connected) {
             switch (keyCode) {
-                case 37: keyCode = 65; break; 
+                case 37: keyCode = 65; break;
                 case 38: keyCode = 87; break;
                 case 39: keyCode = 68; break;
                 case 40: keyCode = 83; break;
@@ -112,7 +138,7 @@ const Socket = (function() {
     }
 
     const attack = function (x, y) {
-        if (socket && socket.connected) 
+        if (socket && socket.connected)
             socket.emit("send attack", playerId, x, y);
     }
 
@@ -126,7 +152,7 @@ const Socket = (function() {
     }
 
     const rematch = function (rematch) {
-        if (socket && socket.connected) 
+        if (socket && socket.connected)
             socket.emit("rematch", playerId, rematch);
     }
 
@@ -138,9 +164,10 @@ const Socket = (function() {
         }
     }
 
-    return { 
-        getSocket, setPlayerId, 
-        connect, disconnect, 
-        createGame, ready, cheat, action, attack, getRandomPos, rematch, leaveGame 
+    return {
+        getSocket, setPlayerId,
+        connect, disconnect,
+        sendInvitation, acceptInvitation, declineInvitation,
+        createGame, ready, cheat, action, attack, getRandomPos, rematch, leaveGame
     };
 })();
