@@ -99,14 +99,14 @@ const Player = function(ctx, x, y, gameArea, id) {
     const hurt = function() {
         hurtStatus = 1;
         lives--;
-        if(lives == 0) {
+        if(lives <= 0) {
             stop(direction);
             sprite.setSequence(sequences.death);
         } else {
             sprite.setSequence(sequences.hurt);
         }
 
-        return lives == 0;
+        return lives <= 0;
     }
 
     const endHurt = function() {
