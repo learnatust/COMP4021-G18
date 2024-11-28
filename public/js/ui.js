@@ -53,6 +53,7 @@ const OnlineUsersPanel = (function() {
                 .then((res) => res.json())
                 .then((json) => {
                     if (json.status == "success") {
+                        $("#authSignUpForm").get(0).reset();
                         $("#register-message").text("You can sign in now!");
                     } else {
                         $("#register-message").text(json.error);
@@ -152,6 +153,7 @@ const OnlineUsersPanel = (function() {
                     user = json.user;
                     $(".auth-container").hide();
                     document.getElementById("home-page").style.visibility = "visible";
+                    document.getElementById("users-name").innerText = user.name;
                     Socket.connect();
                 } else { $(".auth-container").show(); };
             })
