@@ -182,7 +182,7 @@ const OnlineUsersPanel = (function() {
 
         for (const socketId in onlineUsers) {
             if (socketId != currentSocketId) {
-                const userDiv = $("<div id='username-" + onlineUsers[socketId].name + "'></div>")
+                const userDiv = $("<div id='username-" + onlineUsers[socketId].username + "'></div>")
                     .append(UI.getUserDisplay(onlineUsers[socketId]));
 
                 onlineUsersArea.append(userDiv);
@@ -198,10 +198,10 @@ const OnlineUsersPanel = (function() {
     // This function adds a user in the panel
     const addUser = function(userSocketId, user) {
         const onlineUsersArea = $("#online-users-area");
-        const userDiv = onlineUsersArea.find("#username-" + user.name);
+        const userDiv = onlineUsersArea.find("#username-" + user.username);
 
         if (userDiv.length == 0) {
-            const newUserDiv = $("<div id='username-" + user.name + "'></div>")
+            const newUserDiv = $("<div id='username-" + user.username + "'></div>")
                 .append(UI.getUserDisplay(user));
 
             onlineUsersArea.append(newUserDiv);
@@ -219,7 +219,7 @@ const OnlineUsersPanel = (function() {
         const onlineUsersArea = $("#online-users-area");
 
         // Find the user
-        const userDiv = onlineUsersArea.find("#username-" + user.name);
+        const userDiv = onlineUsersArea.find("#username-" + user.username);
 
         // Remove the user
         if (userDiv.length > 0) userDiv.remove();
@@ -242,7 +242,7 @@ const UI = (function() {
             "<span class='status-ingame'>In Game, Cannot pair up</span>";
 
         return $("<div class='field-content row shadow' style='cursor: pointer;'></div>")
-            .append($("<span class='user-name'>" + user.name + "</span>"))
+            .append($("<span class='user-name'>" + user.username + "</span>"))
             .append($("<span class='user-status'>" + status + "</span>"))
             .on('click', function() {
                 $(this).parent().trigger('click');
@@ -251,7 +251,7 @@ const UI = (function() {
 
     const invitationModal = {
         show: function(userData) {
-            $('.inviter-name').text(userData.name);
+            $('.inviter-name').text(userData.username);
 
             $('#accept-invite-btn').off().on('click', () => {
                 Socket.acceptInvitation(userData.socketId);
@@ -273,7 +273,7 @@ const UI = (function() {
 
     // Modify the click handler in OnlineUsersPanel.addUser
     const initializeUserClick = function(userSocketId, user) {
-        $(document).on('click', `#username-${user.name}`, function() {
+        $(document).on('click', `#username-${user.username}`, function() {
             if (user.gameId === null) {
                 Socket.sendInvitation(userSocketId);
                 notificationModal.show(user);
@@ -283,7 +283,7 @@ const UI = (function() {
 
     const notificationModal = {
         show: function(userData) {
-            $('.inviter-name').text(userData.name);
+            $('.inviter-name').text(userData.username);
             $('#notification-modal').css('display', 'flex');
         },
 

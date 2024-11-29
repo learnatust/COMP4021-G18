@@ -272,7 +272,8 @@ io.on("connect", (socket) => {
         if (user) {
             io.to(targetSocketId).emit("receive invitation", {
                 socketId: socket.id,
-                name: user.name
+                username: user.username,
+                // name: user.name
             });
         }
     });
