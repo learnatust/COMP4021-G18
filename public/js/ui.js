@@ -283,7 +283,6 @@ const UI = (function() {
 
     const notificationModal = {
         show: function(userData) {
-            console.log("HERE");
             $('.inviter-name').text(userData.name);
             $('#notification-modal').css('display', 'flex');
         },
