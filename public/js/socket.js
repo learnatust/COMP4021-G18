@@ -47,6 +47,7 @@ const Socket = (function() {
 
         socket.on("invitation declined", (userData) => {
             // For now, no message saying that the invitation was declined
+            UI.notificationModal.hide(userData);
         });
 
         socket.on("join game", () => {

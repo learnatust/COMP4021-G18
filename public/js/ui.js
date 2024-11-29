@@ -117,22 +117,22 @@ const OnlineUsersPanel = (function() {
 
         $("#sign-out-btn").on("click", (e) => {
             fetch("/signout", {
-                method: "GET"
-            })
-            .then((res) => res.json())
-            .then((json) => {
-                if (json.status == "success") {
-                    user = null;
-                    // Hide the home page
-                    document.getElementById("home-page").style.visibility = "hidden";
-                    $("#landing-page").show();
-                    // Disconnect socket
-                    Socket.disconnect();
-                }
-            })
-            .catch((err) => {
-                console.log("Error!");
-            });
+                    method: "GET"
+                })
+                .then((res) => res.json())
+                .then((json) => {
+                    if (json.status == "success") {
+                        user = null;
+                        // Hide the home page
+                        document.getElementById("home-page").style.visibility = "hidden";
+                        $("#landing-page").show();
+                        // Disconnect socket
+                        Socket.disconnect();
+                    }
+                })
+                .catch((err) => {
+                    console.log("Error!");
+                });
         });
 
         $("#play-btn").on("click", () => {
@@ -148,7 +148,7 @@ const OnlineUsersPanel = (function() {
                 $("#signin-message").text("");
                 $("#register-message").text("");
             }
-        }); 
+        });
     };
 
     const validate = function(onSuccess, onError) {
@@ -165,7 +165,7 @@ const OnlineUsersPanel = (function() {
                     // document.getElementById("home-page").style.visibility = "visible";
                     document.getElementById("users-name").innerText = user.name;
                     Socket.connect();
-                } 
+                }
                 // else { $(".auth-container").show(); };
             })
             .catch((err) => {
@@ -250,39 +250,58 @@ const UI = (function() {
     };
 
     const invitationModal = {
-            show: function(userData) {
-                $('.inviter-name').text(userData.name);
+        show: function(userData) {
+            $('.inviter-name').text(userData.name);
 
-                $('#accept-invite-btn').off().on('click', () => {
-                    Socket.acceptInvitation(userData.socketId);
-                    this.hide();
-                });
-
-                $('#decline-invite-btn').off().on('click', () => {
-                    Socket.declineInvitation(userData.socketId);
-                    this.hide();
-                });
-
-                $('#invitation-modal').css('display', 'flex');
-            },
-
-            hide: function() {
-                $('#invitation-modal').hide();
-            }
-        };
-
-        // Modify the click handler in OnlineUsersPanel.addUser
-        const initializeUserClick = function(userSocketId, user) {
-            $(document).on('click', `#username-${user.name}`, function() {
-                if (user.gameId === null) {
-                    Socket.sendInvitation(userSocketId);
-                }
+            $('#accept-invite-btn').off().on('click', () => {
+                Socket.acceptInvitation(userData.socketId);
+                this.hide();
             });
-        };
+
+            $('#decline-invite-btn').off().on('click', () => {
+                Socket.declineInvitation(userData.socketId);
+                this.hide();
+            });
+
+            $('#invitation-modal').css('display', 'flex');
+        },
+
+        hide: function() {
+            $('#invitation-modal').hide();
+        }
+    };
+
+    // Modify the click handler in OnlineUsersPanel.addUser
+    const initializeUserClick = function(userSocketId, user) {
+        $(document).on('click', `#username-${user.name}`, function() {
+            if (user.gameId === null) {
+                Socket.sendInvitation(userSocketId);
+                notificationModal.show(user);
+            }
+        });
+    };
+
+    const notificationModal = {
+        show: function(userData) {
+            console.log("HERE");
+            $('.inviter-name').text(userData.name);
+            $('#notification-modal').css('display', 'flex');
+        },
+
+        hide: function(userData) {
+            $("#notification-content h3").text("Invitation declined.");
+            setTimeout(() => {
+                $('#notification-modal').hide();
+                $('.inviter-name').text("");
+                $("#notification-content").html(`<h3>Inviting <span class="inviter-name"></span>...</h3>`);
+            }, 1500);
+        }
+    }
 
     return {
         getUserDisplay,
         invitationModal,
-        initializeUserClick
+        initializeUserClick,
+        notificationModal
     };
 })();
