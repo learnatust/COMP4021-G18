@@ -206,16 +206,16 @@ const Sprite = function(ctx, x, y, _notes = null) {
             sequence.height * scale
         );
 
-        if (notes.type != "fire") {
-            const box = getBoundingBox();
-            ctx.strokeStyle = "red";
-            ctx.strokeRect(
-                parseInt(x - (box.getRight() - box.getLeft()) / 2),
-                notes.type == "player" ? parseInt(box.getTop()) : parseInt(y - (box.getBottom() - box.getTop()) / 2),
-                (box.getRight() - box.getLeft()),
-                (box.getBottom() - box.getTop())
-            );
-        }
+        // if (notes.type != "fire") {
+        //     const box = getBoundingBox();
+        //     ctx.strokeStyle = "red";
+        //     ctx.strokeRect(
+        //         parseInt(x - (box.getRight() - box.getLeft()) / 2),
+        //         notes.type == "player" ? parseInt(box.getTop()) : parseInt(y - (box.getBottom() - box.getTop()) / 2),
+        //         (box.getRight() - box.getLeft()),
+        //         (box.getBottom() - box.getTop())
+        //     );
+        // }
 
         /* Restore saved settings */
         ctx.restore();
