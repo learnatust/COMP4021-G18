@@ -3,7 +3,7 @@ const hitboxes = {
     attack: { width: 11, height: 15 },
     player: { width: 10, height: 22 },
     trap: { width: 12, height: 9 },
-    heart: { width: 5, height: 5 }
+    heart: { width: 7, height: 7 }
 }
 
 // This function defines a Sprite module.
