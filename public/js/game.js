@@ -76,6 +76,8 @@ const Game = (function() {
 	/************************ WebSocket functions ************************/
 
 	function playerId(id) {
+		$("#notification-modal").hide();
+
 		console.log(id);
 		if (id == 1) {
 			localPlayer.id = 1;
