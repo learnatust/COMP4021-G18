@@ -16,7 +16,7 @@ const Game = (function() {
 		darkbolt: new Audio("./assets/dark_bolt.mp3"),
 	};
 
-	const showHeartTime = 5000;
+	const showHeartTime = 10000;
 	const addTrapTime = 20000;
 
 	const totalGameTime = 180; // Total game time in seconds
@@ -24,7 +24,7 @@ const Game = (function() {
 	let gameStartTime = 0; // The timestamp when the game starts
 	let collectedGems = 0; // The number of gems collected in the game
 	let lastAttackTimeMs = 0;
-	const attackCooldownMs = 500; // 1s
+	const attackCooldownMs = 2000; // 2s
 	const trapCooldownMs = 5000;
 
 	/* Create the game area */
